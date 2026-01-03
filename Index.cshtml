@@ -1,0 +1,138 @@
+@model FeedbackSystem.Models.Student
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Left side - Welcome Message -->
+        <div class="col-md-6">
+            <div class="text-center mt-5">
+                <h1 class="display-4 mb-4">Welcome to Feedback System</h1>
+                <p class="lead">A platform for students to provide valuable feedback about their educational experience.</p>
+                <hr class="my-4">
+                <p>Your feedback helps us improve and provide better education.</p>
+            </div>
+        </div>
+
+        <!-- Right side - Login/Signup Form -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <ul class="nav nav-tabs nav-fill mb-4" id="studentTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="true">Login</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button" role="tab" aria-controls="signup" aria-selected="false">Sign Up</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="studentTabContent">
+                        <!-- Login Tab -->
+                        <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+                            <form asp-controller="Account" asp-action="StudentLogin" method="post">
+                                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+                                <div class="form-group mb-3">
+                                    <label for="registerNumber" class="control-label">Register Number</label>
+                                    <input type="text" id="registerNumber" name="registerNumber" class="form-control" placeholder="Enter your register number" required />
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="password" class="control-label">Password</label>
+                                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required />
+                                </div>
+
+                                <div class="form-group text-center">
+                                    <button type="submit" class="btn btn-primary">Login</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Signup Tab -->
+                        <div class="tab-pane fade" id="signup" role="tabpanel" aria-labelledby="signup-tab">
+                            <form asp-controller="Account" asp-action="StudentSignup" method="post">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="RegisterNumber" class="control-label"></label>
+                                    <input asp-for="RegisterNumber" class="form-control" placeholder="Enter register number" />
+                                    <span asp-validation-for="RegisterNumber" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="FullName" class="control-label"></label>
+                                    <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
+                                    <span asp-validation-for="FullName" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="Department" class="control-label"></label>
+                                    <select asp-for="Department" class="form-control">
+                                        <option value="">Select Department</option>
+                                        <option value="CSE">Computer Science and Engineering</option>
+                                        <option value="ECE">Electronics and Communication Engineering</option>
+                                        <option value="EEE">Electrical and Electronics Engineering</option>
+                                        <option value="MECH">Mechanical Engineering</option>
+                                        <option value="CIVIL">Civil Engineering</option>
+                                    </select>
+                                    <span asp-validation-for="Department" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="Email" class="control-label"></label>
+                                    <input asp-for="Email" class="form-control" placeholder="Enter email" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="Password" class="control-label"></label>
+                                    <input asp-for="Password" class="form-control" type="password" placeholder="Enter password" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group text-center">
+                                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Preserve active tab after form submission if there are validation errors
+        $(document).ready(function() {
+            if (window.location.hash === '#signup' || '@TempData["ActiveTab"]' === 'signup') {
+                $('#signup-tab').tab('show');
+            }
+
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function() {
+                $('.alert').alert('close');
+            }, 5000);
+        });
+    </script>
+}
